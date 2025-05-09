@@ -18,6 +18,12 @@ body {
   margin: 0;
   font-family: 'Lato', sans-serif;
 }
+.income-highlight {
+  background-color: #d4f9d4; /* light green */
+  border-radius: 8px;
+  transition: background-color 0.5s;
+}
+
 
 .container {
   margin: 30px auto;

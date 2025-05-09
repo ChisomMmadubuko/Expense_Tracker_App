@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 
-//Money formatter function
+// Money formatter function
 function moneyFormatter(num) {
   let p = num.toFixed(2).split('.');
   return (
@@ -20,6 +20,9 @@ function moneyFormatter(num) {
 export const IncomeExpenses = () => {
   const { transactions } = useContext(GlobalContext);
 
+  const [incomeBoxColor, setIncomeBoxColor] = useState('white');
+  const [expenseBoxColor, setExpenseBoxColor] = useState('white');
+
   const amounts = transactions.map(transaction => transaction.amount);
 
   const income = amounts
@@ -31,19 +34,43 @@ export const IncomeExpenses = () => {
     -1
   );
 
+  // Set the income box color to green on page load
+  useEffect(() => {
+    setIncomeBoxColor('darkgreen');
+  }, []);
+
   return (
     <div className="inc-exp-container">
-        <div>
-          <h4>Income</h4>
-  <p className="money plus">{moneyFormatter(income)}</p>
-        </div>
-        <div>
-          <h4>Expense</h4>
-  <p className="money minus">{moneyFormatter(expense)}</p>
-        </div>
+      <div
+        style={{
+          backgroundColor: incomeBoxColor,
+          padding: '10px',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+        onClick={() => setIncomeBoxColor('darkgreen')}
+        onDoubleClick={() => setIncomeBoxColor('white')}
+      >
+        <h4>Income</h4>
+        <p className="money plus">{moneyFormatter(income)}</p>
       </div>
-  )
-}
+      <div
+        style={{
+          backgroundColor: expenseBoxColor,
+          padding: '10px',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+        onClick={() => setExpenseBoxColor('darkred')}
+        onDoubleClick={() => setExpenseBoxColor('white')}
+      >
+        <h4>Expense</h4>
+        <p className="money minus">{moneyFormatter(expense)}</p>
+      </div>
+    </div>
+  );
+};
+
 
 
 
