@@ -7,20 +7,30 @@ const AddTransaction = () => {
   const [text, setText] = useState('');
   const [amount, setAmount] = useState(0);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Reusable function to add a transaction
+  const addNewTransaction = (amt) => {
+    if (!text || !amt) return; // Prevent empty submissions
 
     const newTransaction = {
       id: Math.floor(Math.random() * 100000000),
       text,
-      amount: +amount, // Convert string to number
+      amount: +amt, // Convert string to number
     };
 
     addTransaction(newTransaction);
-
     setText('');
     setAmount(0);
   };
+
+  // Button submit handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addNewTransaction(amount);
+  };
+
+  // Handlers for income/expense boxes
+  const handleIncomeClick = () => addNewTransaction(Math.abs(amount));
+  const handleExpenseClick = () => addNewTransaction(-Math.abs(amount));
 
   return (
     <div>
@@ -37,8 +47,7 @@ const AddTransaction = () => {
         </div>
         <div className="form-control">
           <label htmlFor="amount">
-            Amount <br />
-            (negative - expense, positive - income)
+            Amount <br /> (negative - expense, positive - income)
           </label>
           <input
             type="number"
@@ -47,11 +56,28 @@ const AddTransaction = () => {
             placeholder="Enter amount..."
           />
         </div>
-        <button className="btn">Add transaction</button>
+        {/* <button className="btn">Add transaction</button> */}
       </form>
+      <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+        <div
+          className="income-box"
+          style={{ background: '#d4edda', padding: '10px', cursor: 'pointer' }}
+          onClick={handleIncomeClick}
+        >
+          Income
+        </div>
+        <div
+          className="expense-box"
+          style={{ background: '#f8d7da', padding: '10px', cursor: 'pointer' }}
+          onClick={handleExpenseClick}
+        >
+          Expense
+        </div>
+      </div>
     </div>
   );
 };
 
 export default AddTransaction;
+// ...existing code...
 

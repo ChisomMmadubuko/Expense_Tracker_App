@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 
 // Money formatter function
@@ -17,11 +17,8 @@ function moneyFormatter(num) {
   );
 }
 
-export const IncomeExpenses = () => {
-  const { transactions } = useContext(GlobalContext);
-
-  const [incomeBoxColor, setIncomeBoxColor] = useState('white');
-  const [expenseBoxColor, setExpenseBoxColor] = useState('white');
+export const IncomeExpenses = ({ text, amount }) => {
+  const { transactions, addTransaction } = useContext(GlobalContext);
 
   const amounts = transactions.map(transaction => transaction.amount);
 
@@ -34,35 +31,48 @@ export const IncomeExpenses = () => {
     -1
   );
 
-  // Set the income box color to green on page load
-  useEffect(() => {
-    setIncomeBoxColor('darkgreen');
-  }, []);
+  // Handler for adding income
+  const handleIncomeClick = () => {
+    if (!text || !amount) return;
+    addTransaction({
+      id: Math.floor(Math.random() * 100000000),
+      text,
+      amount: Math.abs(Number(amount)),
+    });
+  };
+
+  // Handler for adding expense
+  const handleExpenseClick = () => {
+    if (!text || !amount) return;
+    addTransaction({
+      id: Math.floor(Math.random() * 100000000),
+      text,
+      amount: -Math.abs(Number(amount)),
+    });
+  };
 
   return (
     <div className="inc-exp-container">
       <div
         style={{
-          backgroundColor: incomeBoxColor,
+          backgroundColor: 'darkgreen',
           padding: '10px',
           borderRadius: '5px',
           cursor: 'pointer',
         }}
-        onClick={() => setIncomeBoxColor('darkgreen')}
-        onDoubleClick={() => setIncomeBoxColor('white')}
+        onClick={handleIncomeClick}
       >
         <h4>Income</h4>
         <p className="money plus">{moneyFormatter(income)}</p>
       </div>
       <div
         style={{
-          backgroundColor: expenseBoxColor,
+          backgroundColor: 'darkred',
           padding: '10px',
           borderRadius: '5px',
           cursor: 'pointer',
         }}
-        onClick={() => setExpenseBoxColor('darkred')}
-        onDoubleClick={() => setExpenseBoxColor('white')}
+        onClick={handleExpenseClick}
       >
         <h4>Expense</h4>
         <p className="money minus">{moneyFormatter(expense)}</p>
